@@ -1,18 +1,7 @@
-import * as React from 'react';
+import React, { useState } from "react";
 import { Image, Text, View, StyleSheet, ScrollView } from 'react-native';
-import { Button } from '@rneui/themed';
+import Livros from './src/Components/Livros'
 
-
-function Card (props) {
-  return (
-    <View style={styles.card}>
-      <Image style={styles.livro} source={{ uri:props.livro.capa }} />
-      <Text style={{ color: 'black' }}> {props.livro.titulo} </Text>
-      <Text style={{ fontSize: 12}}> R$ {props.livro.preco.toString()} </Text>
-    </View>
-);
-}
-export default function App() {
   const livros = [
     {
       id: 1,
@@ -61,15 +50,36 @@ export default function App() {
       capa:'https://imagens.disal.com.br/produtos/ampliada/5286190.jpg',
       titulo: 'A Herdeira',
       preco: 44.00
-    },
-    
+    }, 
   ]
+
+const ListaLivros = () => {
+  const [livrosList, setLivrosList] = useState(livros);
+  
+  const handleRemove = (index) => {
+    const newLivrosList = [...livrosList];
+    newLivrosList.splice(index, 1);
+    setLivrosList(newLivrosList);
+  };
+
+return (
+  <ScrollView style={styles.scroll}>
+      <View style={styles.conteudo}>
+        {livrosList.map((livro, index) => (
+          <Livros key={index} livro={livro} onRemove={() => handleRemove(index)} />
+        ))}
+      </View>
+    </ScrollView>
+  );
+};
+
+export default function App() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={{ fontSize:25, fontWeight: 'bold'}}>Livraria</Text>
+        <Text style={styles.nome}>Livraria</Text>
         < View style={styles.conteudo}>
-          { livros.map(livro => <Card livro={livro} key={livro.id}/> )}
+          <ListaLivros />
         </View>
       </View>
     </ScrollView>
@@ -91,17 +101,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: '100%'
   },
-  card: {
-    backgroundColor: 'white',
-    width: '40%',
+  nome: {
+    fontSize: 32,
     padding: 10,
-    height: 260,
-    borderRadius: 10,
-    margin: 15,
-  },
-  livro: {
-    resizeMode: 'stretch',
-    width: '100%',
-    height: 200,
-  },
+    color: 'white',
+    textAlign: 'center',
+  }
 });
